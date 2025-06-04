@@ -31,7 +31,7 @@ Por el momento solo esta implementada la clase `Main` a modo de ejemplo.
 
 1. Instalar JDK 21 y Maven.
 2. Desde la carpeta `app`, ejecutar `mvn package` para compilar el proyecto.
-3. Ejecutar la aplicacion con `mvn exec:java -Dexec.mainClass=org.utn.sim.Main` o bien con `java -cp target/classes org.utn.sim.Main` despues de la compilacion.
+3. Ejecutar la aplicacion con `mvn exec:java -Dexec.mainClass=org.utn.sim.Main` o bien con `java -cp target/classes org.utn.sim.Main` despues de la compilacion. //si no les funcion el de maven pongan entre comillas el -> "-Dexec..Main"
 
 ## Diagramas
 
@@ -41,4 +41,3 @@ En la carpeta `assets` se encuentran los principales diagramas utilizados durant
 - `diagrama de estado asistente.png`
 - `diagrama de estado impresora.png`
 - `diagrama de estado tecnico.png`
-
