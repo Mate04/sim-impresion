@@ -4,7 +4,6 @@ package org.utn.sim.model;
 import lombok.Data;
 
 @Data
-
 public class Tecnico {
     private EstadoTecnico estado;
     private Impresora impresoraManteniendola;

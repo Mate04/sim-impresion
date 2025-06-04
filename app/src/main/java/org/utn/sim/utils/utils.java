@@ -1,6 +1,6 @@
-package org.utn.sim;
+package org.utn.sim.utils;
 
-public class utils {
+public class Utils {
 
     // aca llevamos a cabo el calculo de la variable exponencial negativa, tomando
     // como parametros la media y el random, que se pueden modificar por entrada del
