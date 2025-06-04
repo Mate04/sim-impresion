@@ -18,10 +18,15 @@ public class Asistente {
                 ", horavuelta=" + horavuelta +
                 '}';
     }
-
-    public Asistente (double horallegada){
+    //El creador tiene estos datos, si cola colalibre es true ingresa a la cola, si no postega
+    public Asistente (double horallegada, boolean colaLibre, double horavuelta){
         this.horallegada = horallegada;
-        this.estado = EstadoAsistente.CREADO;
+        if (colaLibre){
+            ingresarCola();
+        }
+        else{
+            postergar(horavuelta);
+        }
     }
 
     public void destruir(){
