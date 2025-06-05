@@ -1,12 +1,26 @@
 package org.utn.sim;
 
+import org.utn.sim.core.Simulador;
 import org.utn.sim.model.Impresora;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Impresora impresora = new Impresora();
-        System.out.println("Estado inicial de la impresora: " + impresora.toString());
-        impresora.imprimirTicket(10.0);
-        System.out.println("Estado de la impresora después de imprimir: " + impresora.toString());
+        //Pedir los datos de X tiempo, i iteraciones, y hora j
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Ingrese el tiempo X (en minutos) a simular:");
+        double X = scanner.nextDouble();
+
+        System.out.println("Ingrese la hora j (en minutos) para iniciar la simulación:");
+        double j = scanner.nextDouble();
+
+        System.out.println("Ingrese el número de iteraciones i:");
+        int i = scanner.nextInt();
+
+        Simulador simulador = new Simulador();
+        simulador.run(X, j, i);
+
     }
 }

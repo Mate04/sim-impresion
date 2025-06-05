@@ -7,18 +7,15 @@ import lombok.ToString;
 @ToString
 public class Impresora {
     private EstadoImpresora estado;
-    private double horaInicioImpresion;
     private boolean mantenimientoSession;
 
     public Impresora() {
         this.estado = EstadoImpresora.LIBRE;
-        this.horaInicioImpresion = 0.0;
         this.mantenimientoSession = false;
     }
 
-    public void imprimirTicket(double hora){
+    public void imprimirTicket(){
         this.estado = EstadoImpresora.OCUPADO;
-        this.horaInicioImpresion = hora;
     }
 
     public void libre(){
@@ -28,4 +25,16 @@ public class Impresora {
     public void realizarMantenimiento(){
         this.estado = EstadoImpresora.EN_MANTENIMIENTO;
     }
+
+    public boolean estaLibre(){
+        return this.estado == EstadoImpresora.LIBRE;
+    }
 }
+
+
+
+
+
+
+
+
