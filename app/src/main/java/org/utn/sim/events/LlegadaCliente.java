@@ -15,22 +15,31 @@ import org.utn.sim.utils.Utils;
 @Data
 public class LlegadaCliente extends Event {
     private String nombre = "LlegadaCliente";
-    //Si no es postergado el asistente esta null
+    // Asistente que ingresa al sistema (puede venir postergado)
     private Asistente asistente;
-    //Constructor para asistente normal
+
+    /**
+     * Constructor para un arribo normal.
+     */
     public LlegadaCliente(double tiempoActual) {
         this.tiempoUsado = Utils.exponencialNegativa(2);
         this.tiempoLlegada = tiempoActual + tiempoUsado;
         this.asistente = new Asistente();
     }
-    //Contructor para el evento postergador
+
+    /**
+     * Constructor para un asistente previamente postergado.
+     */
     public LlegadaCliente(double tiempoActual, Asistente asistente) {
         this.asistente = asistente;
         this.tiempoUsado = 30;
         this.tiempoLlegada = tiempoActual + tiempoUsado;
     }
 
-    //todo: Aca se implementa la logica de lo que sucede cuando llega un cliente
+    /**
+     * Maneja la lógica cuando un asistente llega al sistema. Puede ser atendido,
+     * pasar a la cola o ser postergado.
+     */
     public void execute(Simulador simulador) {
         System.out.println("Llegada Cliente, tiempo: " + tiempoLlegada + " Asistente en cola " + simulador.getColaAsistentes().size()) ;
 

@@ -19,13 +19,26 @@ Dentro de `app` se espera la siguiente organizacion del codigo:
 ```
 src/
 ├── events/          -> Clases de eventos (arribo, salida, etc.)
-├── core/            -> Núcleo de la simulacion
+├── core/            -> Núcleo de la simulación
 ├── model/           -> Elementos del sistema
-├── main/            -> Contendra Main.java
+├── main/            -> Contendrá Main.java
 └── utils/           -> Utilidades (generadores de tiempos)
 ```
 
-Por el momento solo esta implementada la clase `Main` a modo de ejemplo.
+A continuación se describen brevemente los componentes más importantes del
+directorio `src`:
+
+- **core/Simulador**: gestiona el ciclo de eventos, la cola de asistentes y
+  mantiene la lista de impresoras disponibles.
+- **events**: contiene los eventos `LlegadaCliente` y `FinImpresion`, que
+  extienden de la clase abstracta `Event` y definen la lógica de la
+  simulación.
+- **model**: incluye las clases `Asistente`, `Impresora`, `Tecnico` y sus
+  enumeraciones de estado, modelando a los participantes del sistema.
+- **utils/Utils**: ofrece métodos para generar tiempos aleatorios (variables
+  exponencial y uniforme) usados en los eventos.
+- **main/Main**: punto de entrada que solicita por consola los parámetros de la
+  simulación y ejecuta el `Simulador`.
 
 ## Compilacion y ejecucion
 
