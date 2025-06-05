@@ -4,8 +4,11 @@ import lombok.Data;
 import lombok.ToString;
 import org.utn.sim.events.Event;
 import org.utn.sim.events.LlegadaCliente;
+import org.utn.sim.events.LlegadaTecnico;
 import org.utn.sim.model.Asistente;
+import org.utn.sim.model.EstadoImpresora;
 import org.utn.sim.model.Impresora;
+import org.utn.sim.model.Tecnico;
 
 import java.util.*;
 
@@ -13,12 +16,15 @@ import java.util.*;
 @ToString
 public class Simulador {
     protected double tiempoActual;
+    protected Event eventoActual;
     protected double X; // Tiempo de inicio de simulación
     protected double j; // Hora de inicio
     protected int i; // Número de iteraciones
     private int iteracionActual = 0;
     //Listado  de impresoras que son permanentes
     private List<Impresora> impresoras = new ArrayList<>();
+    //tecnico objeto permanente de simulacion
+    private Tecnico tecnico;
     //Cola
     private PriorityQueue<Event> eventosAProcesar = new PriorityQueue<>();
     private Queue<Asistente> asistentesConsumiendoServicio = new LinkedList<>();
@@ -29,6 +35,7 @@ public class Simulador {
     private int acumAsistentesFinalizados = 0;
     private int acumAsistentesEstuvieronCola = 0;
     private double acumuladorTiempoCola = 0;
+    private int acumReparaciones = 0;
 
     /**
      * Constructor por defecto. Inicializa el tiempo en cero, crea la lista de
@@ -36,8 +43,11 @@ public class Simulador {
      */
     public Simulador() {
         this.tiempoActual = 0.0;
+        this.tecnico = new Tecnico();
         this.crearListaImpresoras(6);
         this.eventosAProcesar.add(new LlegadaCliente(tiempoActual));
+        this.eventosAProcesar.add(new LlegadaTecnico(tiempoActual));
+
     }
 
     /**
@@ -52,16 +62,22 @@ public class Simulador {
         this.X = X;
         this.j = j;
         this.i = i;
+        int iteracionMostrada = 0;
+        while (tiempoActual < X && iteracionActual < 100000) {
 
-        while (tiempoActual < X && iteracionActual < i) {
-            Event proximoEvento = obtenerProximoEvento();
-            proximoEvento.execute(this);
-            this.tiempoActual = proximoEvento.getTiempoLlegada();
+            eventoActual = obtenerProximoEvento();
+            eventoActual.execute(this);
+            this.tiempoActual = eventoActual.getTiempoLlegada();
             this.iteracionActual++;
-        }
-        System.out.println(this);
-    }
+            if (this.tiempoActual >= j && iteracionMostrada < i) {
+                System.out.println(this);
+                iteracionMostrada++;
+            }
+            ;
 
+
+        }
+    }
 
     /**
      * Encola un nuevo evento para ser procesado en el futuro.
@@ -75,6 +91,21 @@ public class Simulador {
      */
     public void agregarImpresora(Impresora impresora) {
         this.impresoras.add(impresora);
+    }
+
+    @Override
+    public String toString() {
+        return "Simulador{" +
+                "IteracionActual=" + iteracionActual +
+                ", tiempoActual=" + tiempoActual +
+                ", evento actual" + eventoActual +
+                ", impresoras=" + impresoras +
+                ", acumuladorTiempoCola=" + acumuladorTiempoCola +
+                ", acumAsistentesEstuvieronCola=" + acumAsistentesEstuvieronCola +
+                ", acumAsistentesFinalizados=" + acumAsistentesFinalizados +
+                ", acumAsistentesPostergados=" + acumAsistentesPostergados +
+                ", estadoTecnico=" + tecnico.getEstado() +
+                '}';
     }
 
     /**
@@ -147,6 +178,40 @@ public class Simulador {
     /** Aumenta el contador de asistentes que pasaron por la cola. */
     public void sumarAsistentesEstuvieronCola() {
         this.acumAsistentesEstuvieronCola++;
+    }
+
+    public boolean hayMaquinasParaMantener(){
+        for (Impresora impresora : impresoras){
+            if (!impresora.isMantenimientoSession()){
+                return false;
+            }
+        }
+        return true;
+    }
+    public void setMantenimientoMaquina(){
+        for (Impresora impresora : impresoras){
+            impresora.setMantenimientoSession(false);
+        }
+    }
+
+    public Impresora obtenerImpresoraAMantener(){
+        for (Impresora impresora : impresoras) {
+            if (impresora.estaLibre() && !impresora.isMantenimientoSession()) {
+                return impresora;
+            }
+        }
+        return null;
+    }
+
+    public void mostrarEstadoMaquinas() {
+        List<EstadoImpresora> estadosMaquinas = new ArrayList<>();
+        for (Impresora impresora : impresoras) {
+            estadosMaquinas.add(impresora.getEstado());
+        }
+        System.out.println(estadosMaquinas);
+    }
+    public void contarFinImpresion(){
+        this.acumReparaciones++;
     }
 }
 

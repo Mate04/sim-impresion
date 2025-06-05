@@ -11,7 +11,7 @@ import org.utn.sim.utils.Utils;
  * Clase que representa el evento de llegada de un cliente al sistema.
  */
 
-@ToString()
+@ToString
 @Data
 public class LlegadaCliente extends Event {
     private String nombre = "LlegadaCliente";
@@ -41,7 +41,6 @@ public class LlegadaCliente extends Event {
      * pasar a la cola o ser postergado.
      */
     public void execute(Simulador simulador) {
-        System.out.println("Llegada Cliente, tiempo: " + tiempoLlegada + " Asistente en cola " + simulador.getColaAsistentes().size()) ;
 
         simulador.setTiempoActual(tiempoLlegada);
         //TODO: si es un asistente postergado no se calcula proximo evento

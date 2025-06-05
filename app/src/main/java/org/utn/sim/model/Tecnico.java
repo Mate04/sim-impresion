@@ -34,6 +34,7 @@ public class Tecnico {
     public void mantener(Impresora impresora){
         this.estado = EstadoTecnico.REALIZANDO_MANTENIMIENTO;
         this.impresoraManteniendola = impresora;
+        this.impresoraManteniendola.realizarMantenimiento();
     };
 
 }

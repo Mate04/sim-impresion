@@ -1,10 +1,12 @@
 package org.utn.sim.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.ToString;
 
 @Data
 @ToString
+@Getter
 public class Impresora {
     private EstadoImpresora estado;
     private boolean mantenimientoSession;
@@ -29,6 +31,7 @@ public class Impresora {
 
     /** Pone la impresora en mantenimiento. */
     public void realizarMantenimiento(){
+        this.mantenimientoSession = true;
         this.estado = EstadoImpresora.EN_MANTENIMIENTO;
     }
 

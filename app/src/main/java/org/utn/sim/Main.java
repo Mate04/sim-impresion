@@ -12,6 +12,7 @@ public class Main {
      */
     public static void main(String[] args) {
         // Pedir los datos de X tiempo, i iteraciones y hora j
+
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Ingrese el tiempo X (en minutos) a simular:");
