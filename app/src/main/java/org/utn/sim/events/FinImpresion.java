@@ -1,5 +1,6 @@
 package org.utn.sim.events;
 
+import lombok.Data;
 import org.utn.sim.core.Simulador;
 import org.utn.sim.model.Asistente;
 import org.utn.sim.model.EstadoImpresora;
@@ -7,8 +8,10 @@ import org.utn.sim.model.EstadoTecnico;
 import org.utn.sim.model.Impresora;
 import org.utn.sim.utils.Utils;
 
+@Data
 public class FinImpresion extends Event{
     private String nombre = "Fin impresion";
+    private double random;
 
     // Asistente cuya impresión finaliza en este evento
     private Asistente asistente;
@@ -17,7 +20,8 @@ public class FinImpresion extends Event{
      * Constructor que calcula el tiempo de finalización de la impresión.
      */
     public FinImpresion(double tiempoActual, Asistente asistente) {
-        this.tiempoUsado = Utils.uniforme(5,8);
+        this.random = Math.random();
+        this.tiempoUsado = Utils.uniforme(5,8, random);
         this.tiempoLlegada = tiempoActual + tiempoUsado;
         this.asistente = asistente;
     }

@@ -4,16 +4,14 @@ import java.util.Random;
 
 public class Utils {
 
-    private static final Random random = new Random();
-
     /**
      * Calcula una variable aleatoria con distribución exponencial negativa.
      *
      * @param media valor medio de la distribución
      * @return número aleatorio generado
      */
-    public static double exponencialNegativa(double media) {
-        return -media * Math.log(1 - random.nextDouble());
+    public static double exponencialNegativa(double media, double random) {
+        return -media * Math.log(1 - random);
     }
 
     /**
@@ -23,7 +21,7 @@ public class Utils {
      * @param LimiteSuperior valor máximo
      * @return número aleatorio generado
      */
-    public static double uniforme(double LimiteInferior, double LimiteSuperior) {
-        return LimiteInferior + (LimiteSuperior - LimiteInferior) * random.nextDouble();
+    public static double uniforme(double LimiteInferior, double LimiteSuperior, double random) {
+        return LimiteInferior + (LimiteSuperior - LimiteInferior) * random;
     }
 }

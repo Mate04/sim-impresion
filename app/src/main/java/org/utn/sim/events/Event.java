@@ -1,10 +1,14 @@
 package org.utn.sim.events;
 import lombok.Getter;
+import lombok.Setter;
 import org.utn.sim.core.Simulador;
 @Getter
+@Setter
 public abstract class Event implements Comparable<Event>{
     protected double tiempoUsado;
     protected double tiempoLlegada;
+    protected double random;
+    protected String nombre;
 
     public Event(){};
 

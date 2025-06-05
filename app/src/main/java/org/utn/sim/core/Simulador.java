@@ -2,7 +2,11 @@ package org.utn.sim.core;
 
 import lombok.Data;
 import lombok.ToString;
+import org.utn.sim.dto.AsistenteDTO;
+import org.utn.sim.dto.PuntoImpresionDTO;
+import org.utn.sim.dto.SimulacionDTO;
 import org.utn.sim.events.Event;
+import org.utn.sim.events.FinImpresion;
 import org.utn.sim.events.LlegadaCliente;
 import org.utn.sim.events.LlegadaTecnico;
 import org.utn.sim.model.Asistente;
@@ -23,6 +27,7 @@ public class Simulador {
     private int iteracionActual = 0;
     //Listado  de impresoras que son permanentes
     private List<Impresora> impresoras = new ArrayList<>();
+    private List<SimulacionDTO> iteraciones = new ArrayList<>();
     //tecnico objeto permanente de simulacion
     private Tecnico tecnico;
     //Cola
@@ -70,11 +75,10 @@ public class Simulador {
             this.tiempoActual = eventoActual.getTiempoLlegada();
             this.iteracionActual++;
             if (this.tiempoActual >= j && iteracionMostrada < i) {
-                System.out.println(this);
+                SimulacionDTO iteracionAEnviar = new SimulacionDTO(this);
+                this.agregarIteracion(iteracionAEnviar);
                 iteracionMostrada++;
             }
-            ;
-
 
         }
     }
@@ -212,6 +216,50 @@ public class Simulador {
     }
     public void contarFinImpresion(){
         this.acumReparaciones++;
+    }
+
+    public LlegadaCliente buscarProximaLLegadaCliente() {
+        for (Event evento : eventosAProcesar) {
+            if (evento instanceof LlegadaCliente) {
+                return (LlegadaCliente) evento;
+            }
+        }
+        return null;
+    }
+    public LlegadaTecnico buscarProximaLlegadaTecnico() {
+        for (Event evento : eventosAProcesar) {
+            if (evento instanceof LlegadaTecnico) {
+                return (LlegadaTecnico) evento;
+            }
+        }
+        return null;
+    }
+
+    public FinImpresion buscarProximoFinImpresion() {
+        for (Event evento : eventosAProcesar) {
+            if (evento instanceof FinImpresion) {
+                return (FinImpresion) evento;
+            }
+        }
+        return null;
+    }
+
+    public List<PuntoImpresionDTO> generarDTOsPuntosImpresion() {
+        List<PuntoImpresionDTO> puntosImpresion = new ArrayList<>();
+        for (Impresora impresora : impresoras) {
+            puntosImpresion.add(new PuntoImpresionDTO(impresora));
+        }
+        return puntosImpresion;
+    }
+    public List<AsistenteDTO> generarDTOsAsistentes() {
+        List<AsistenteDTO> asistentesDTO = new ArrayList<>();
+        for (Asistente asistente : this.asistentesConsumiendoServicio) {
+            asistentesDTO.add(new AsistenteDTO(asistente));
+        }
+        return asistentesDTO;
+    }
+    public void agregarIteracion(SimulacionDTO simulacionDTO) {
+        this.iteraciones.add(simulacionDTO);
     }
 }
 

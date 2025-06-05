@@ -1,6 +1,7 @@
 package org.utn.sim.events;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.utn.sim.core.Simulador;
 import org.utn.sim.model.Impresora;
@@ -8,12 +9,15 @@ import org.utn.sim.utils.Utils;
 
 @ToString
 @Getter
+@Setter
 public class LlegadaTecnico extends Event{
 
     private String nombre = "Llegada tecnico";
+    private double random;
 
     public LlegadaTecnico(double horaActual){
-        this.tiempoUsado = Utils.uniforme(57, 63);
+        random = Math.random();
+        this.tiempoUsado = Utils.uniforme(57, 63, random);
         this.tiempoLlegada = horaActual + this.tiempoUsado;
     }
 

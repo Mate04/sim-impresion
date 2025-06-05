@@ -17,12 +17,15 @@ public class LlegadaCliente extends Event {
     private String nombre = "LlegadaCliente";
     // Asistente que ingresa al sistema (puede venir postergado)
     private Asistente asistente;
+    private double random;
 
     /**
      * Constructor para un arribo normal.
      */
     public LlegadaCliente(double tiempoActual) {
-        this.tiempoUsado = Utils.exponencialNegativa(2);
+        this.nombre = "Llegada cliente normal";
+        this.random = Math.random();
+        this.tiempoUsado = Utils.exponencialNegativa(2, random);
         this.tiempoLlegada = tiempoActual + tiempoUsado;
         this.asistente = new Asistente();
     }
@@ -31,6 +34,7 @@ public class LlegadaCliente extends Event {
      * Constructor para un asistente previamente postergado.
      */
     public LlegadaCliente(double tiempoActual, Asistente asistente) {
+        this.nombre = "Llegada cliente postergado";
         this.asistente = asistente;
         this.tiempoUsado = 30;
         this.tiempoLlegada = tiempoActual + tiempoUsado;

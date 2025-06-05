@@ -1,15 +1,20 @@
 package org.utn.sim.events;
 
+import lombok.Data;
 import org.utn.sim.core.Simulador;
 import org.utn.sim.model.Impresora;
 import org.utn.sim.utils.Utils;
 
+
+@Data
 public class FinMantenimiento extends Event{
     private String nombre = "Fin mantenimiento";
+    private double random;
     private Impresora impresora;
 
     public FinMantenimiento(double horaActual, Impresora impresora) {
-        this.tiempoUsado = Utils.uniforme(3, 10);
+        this.random = Math.random();
+        this.tiempoUsado = Utils.uniforme(3, 10, random);
         this.tiempoLlegada = horaActual + tiempoUsado;
         this.impresora = impresora;
     }
