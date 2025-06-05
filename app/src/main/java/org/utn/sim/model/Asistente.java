@@ -4,30 +4,33 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@NoArgsConstructor
 @Data
 @ToString
 public class Asistente {
     private EstadoAsistente estado;
-    private double horallegadaCola;
+    private double horallegadaCola = 0;
+    private Impresora impresora;
 
 
     //El creador tiene estos datos, si cola colalibre es true ingresa a la cola, si no postega
-    public Asistente (double horallegadaCola){
-        this.horallegadaCola = horallegadaCola;
+    public Asistente (){
         this.estado = EstadoAsistente.CREADO;
     }
 
     public void destruir(){
+        this.impresora.libre();
         this.estado = EstadoAsistente.DESTRUIDO;
     }
 
-    public void imprimir(){
+    public void imprimir(Impresora impresora){
+        this.impresora = impresora;
+        this.impresora.imprimirTicket();
         this.estado = EstadoAsistente.IMPRIMIENDO;
     }
 
-    public void ingresarCola(){
+    public void ingresarCola(double horaLlegada){
         this.estado = EstadoAsistente.ESPERANDO;
+        this.horallegadaCola = horaLlegada;
     }
 
     public void postergar(){

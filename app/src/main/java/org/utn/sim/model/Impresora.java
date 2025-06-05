@@ -29,6 +29,8 @@ public class Impresora {
     public boolean estaLibre(){
         return this.estado == EstadoImpresora.LIBRE;
     }
+
+
 }
 
 
