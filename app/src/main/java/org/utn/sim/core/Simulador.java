@@ -30,21 +30,30 @@ public class Simulador {
     private int acumAsistentesEstuvieronCola = 0;
     private double acumuladorTiempoCola = 0;
 
+    /**
+     * Constructor por defecto. Inicializa el tiempo en cero, crea la lista de
+     * impresoras inicial y agenda el primer evento de llegada.
+     */
     public Simulador() {
         this.tiempoActual = 0.0;
-        //Creamos las impresoras
         this.crearListaImpresoras(6);
         this.eventosAProcesar.add(new LlegadaCliente(tiempoActual));
     }
 
+    /**
+     * Ejecuta la simulación hasta cumplir el tiempo X o la cantidad de
+     * iteraciones i.
+     *
+     * @param X tiempo total de simulación en minutos
+     * @param j hora de inicio de la muestra (no se utiliza aun)
+     * @param i número de iteraciones a mostrar en consola
+     */
     public void run(double X, double j, int i) {
-        this.X = X; // Tiempo de simulación
-        this.j = j; // Hora de inicio de muestra
-        this.i = i; // Número de iteraciones a mostrar
-        //TODO: implementar ciclo actual
+        this.X = X;
+        this.j = j;
+        this.i = i;
 
         while (tiempoActual < X && iteracionActual < i) {
-            // Obtener el próximo evento a procesar
             Event proximoEvento = obtenerProximoEvento();
             proximoEvento.execute(this);
             this.tiempoActual = proximoEvento.getTiempoLlegada();
@@ -54,52 +63,88 @@ public class Simulador {
     }
 
 
+    /**
+     * Encola un nuevo evento para ser procesado en el futuro.
+     */
     public void agregarEvento(Event evento) {
         eventosAProcesar.offer(evento);
     }
 
+    /**
+     * Agrega una impresora permanente al sistema.
+     */
     public void agregarImpresora(Impresora impresora) {
         this.impresoras.add(impresora);
     }
 
+    /**
+     * Devuelve y remueve el próximo evento según el orden de la cola.
+     *
+     * @return siguiente evento a ejecutar o {@code null} si no hay eventos.
+     */
     public Event obtenerProximoEvento() {
-        return eventosAProcesar.poll(); //todo: Agarra el primer elemento actual, y lo saca
+        return eventosAProcesar.poll();
     }
+    /**
+     * Crea una cantidad fija de impresoras y las agrega a la lista del sistema.
+     */
     public void crearListaImpresoras(int cantidadDeImpresoras) {
         for (int i = 0; i < cantidadDeImpresoras; i++) {
             this.impresoras.add(new Impresora());
         }
     }
 
+    /**
+     * Busca en la lista una impresora que esté libre.
+     *
+     * @return impresora disponible o {@code null} si todas están ocupadas.
+     */
     public Impresora obtenerImpresoraLibre() {
         for (Impresora impresora : impresoras) {
             if (impresora.estaLibre()) {
                 return impresora;
             }
         }
-        return null; // Si no hay impresoras libres
+        return null;
     }
+    /**
+     * Ingresa un asistente a la cola de espera.
+     */
     public void agregarAsistenteCola(Asistente asistente) {
         colaAsistentes.offer(asistente);
     }
+    /**
+     * Verifica si la cola de asistentes posee al menos n elementos.
+     *
+     * @param n cantidad a comparar
+     * @return {@code true} si la cola tiene n o más asistentes
+     */
     public boolean hayMasDeNEnCola(Integer n) {
         return colaAsistentes.size() >= n;
     }
+    /** Incrementa el contador de asistentes que terminaron de imprimir. */
     public void sumarAsistenteFinalizado(){
         this.acumAsistentesFinalizados++;
     }
+    /** Incrementa el contador de asistentes postergados. */
     public void sumarAsistentePostergado() {
         this.acumAsistentesPostergados++;
     }
 
+    /**
+     * Obtiene el primer asistente de la cola y actualiza el tiempo total de espera.
+     *
+     * @return asistente listo para ocupar una impresora o {@code null} si la cola está vacía
+     */
     public Asistente obtenerPrimeroFilaAsistente() {
         Asistente asistente =  this.colaAsistentes.poll();
         if(asistente == null){
             return null;
         }
-        this.acumuladorTiempoCola = (this.tiempoActual - asistente.getHorallegadaCola())+ this.acumuladorTiempoCola;
+        this.acumuladorTiempoCola = (this.tiempoActual - asistente.getHorallegadaCola()) + this.acumuladorTiempoCola;
         return asistente;
     }
+    /** Aumenta el contador de asistentes que pasaron por la cola. */
     public void sumarAsistentesEstuvieronCola() {
         this.acumAsistentesEstuvieronCola++;
     }

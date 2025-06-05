@@ -8,10 +8,14 @@ public abstract class Event implements Comparable<Event>{
 
     public Event(){};
 
+    /**
+     * Ejecuta la lógica del evento sobre el simulador.
+     */
     public abstract void execute(Simulador simulador);
 
     @Override
     public int compareTo(Event other) {
+        // Ordenamos por tiempo de llegada para priorizar el evento más próximo
         return Double.compare(this.tiempoLlegada, other.tiempoLlegada);
     }
 }
