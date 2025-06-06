@@ -2,6 +2,11 @@ package org.utn.sim.events;
 import lombok.Getter;
 import lombok.Setter;
 import org.utn.sim.core.Simulador;
+/**
+ * Clase base para todos los eventos de la simulación. Cada evento conoce el
+ * instante en el que debe ejecutarse y es comparable por dicho tiempo para
+ * poder ser encolado.
+ */
 @Getter
 @Setter
 public abstract class Event implements Comparable<Event>{

@@ -4,6 +4,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Modela una impresora del sistema junto con su estado y banderas de
+ * mantenimiento.
+ */
 @Data
 @ToString
 @Getter

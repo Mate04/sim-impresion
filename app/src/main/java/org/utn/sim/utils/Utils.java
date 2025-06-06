@@ -2,6 +2,10 @@ package org.utn.sim.utils;
 
 import java.util.Random;
 
+/**
+ * Métodos utilitarios para el cálculo de tiempos aleatorios utilizados en la
+ * simulación.
+ */
 public class Utils {
 
     /**

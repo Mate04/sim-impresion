@@ -3,6 +3,9 @@ package org.utn.sim.model;
 
 import lombok.Data;
 
+/**
+ * Representa al técnico encargado del mantenimiento de las impresoras.
+ */
 @Data
 public class Tecnico {
     private EstadoTecnico estado;

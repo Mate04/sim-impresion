@@ -6,6 +6,10 @@ import org.utn.sim.model.Impresora;
 import org.utn.sim.utils.Utils;
 
 
+/**
+ * Evento disparado cuando el técnico finaliza el mantenimiento de una
+ * impresora.
+ */
 @Data
 public class FinMantenimiento extends Event{
     private String nombre = "Fin mantenimiento";

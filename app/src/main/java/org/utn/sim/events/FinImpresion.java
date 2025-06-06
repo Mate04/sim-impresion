@@ -8,6 +8,9 @@ import org.utn.sim.model.EstadoTecnico;
 import org.utn.sim.model.Impresora;
 import org.utn.sim.utils.Utils;
 
+/**
+ * Evento que marca la finalización de la impresión de un asistente.
+ */
 @Data
 public class FinImpresion extends Event{
     private String nombre = "Fin impresion";
