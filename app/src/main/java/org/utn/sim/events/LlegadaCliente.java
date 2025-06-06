@@ -8,7 +8,8 @@ import org.utn.sim.model.Impresora;
 import org.utn.sim.utils.Utils;
 
 /**
- * Clase que representa el evento de llegada de un cliente al sistema.
+ * Clase que representa el evento de llegada de un asistente al sistema de
+ * impresión.
  */
 
 @ToString

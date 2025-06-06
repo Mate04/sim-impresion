@@ -10,9 +10,20 @@ import org.utn.sim.dto.SimulacionRequestDTO;
 
 import java.util.List;
 
+/**
+ * Controlador REST que expone el punto de entrada para ejecutar la simulación
+ * desde el frontend.
+ */
 @RestController
 public class SimController {
 
+    /**
+     * Recibe los parámetros de la simulación y devuelve las iteraciones
+     * solicitadas.
+     *
+     * @param request datos de tiempo total, inicio y cantidad de iteraciones
+     * @return lista con la información de cada iteración generada
+     */
     @PostMapping("/sim")
     public List<SimulacionDTO> simular(@RequestBody SimulacionRequestDTO request) {
         Simulador simulador = new Simulador();

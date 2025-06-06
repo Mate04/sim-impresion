@@ -4,6 +4,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Representa a la persona que llega al sistema para solicitar una impresión.
+ */
 @Data
 @ToString
 public class Asistente {

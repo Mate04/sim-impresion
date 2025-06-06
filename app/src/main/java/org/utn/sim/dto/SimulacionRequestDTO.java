@@ -1,5 +1,9 @@
 package org.utn.sim.dto;
 
+/**
+ * DTO utilizado para recibir los parámetros de la simulación desde el
+ * frontend.
+ */
 public class SimulacionRequestDTO {
     private double tiempo;
     private double inicio;
