@@ -1,70 +1,71 @@
-# TP Nro 4 - Simulacion de impresion
+# Simulación de Impresión - Trabajo Práctico 4
 
-Este repositorio contiene el codigo fuente y los diagramas asociados al trabajo practico numero 4. La aplicacion esta escrita en Java y utiliza Maven como sistema de construccion.
+Este repositorio contiene la implementación de un pequeño simulador de un centro de impresión. El proyecto se divide en dos módulos principales:
 
-## Estructura general
+- **app/** – Aplicación Java (Spring Boot) que expone la lógica de simulación.
+- **app-frontend/** – Aplicación React que consume la API del simulador.
+- **assets/** – Diagramas utilizados durante el modelado.
+- **modelado.eapx** – Archivo del modelo para Enterprise Architect.
 
-```
-.
-├── app/        -> Proyecto Java (Maven)
-├── assets/     -> Imagenes y diagramas de modelo
-├── modelado.eapx
-└── modelado.ldb
-```
+## Requisitos
 
-### Proyecto Java
+- JDK **21** y Maven
+- Node.js y npm (para la interfaz web)
 
-Dentro de `app` se espera la siguiente organizacion del codigo:
+## Compilación y ejecución
 
-```
-src/
-├── events/          -> Clases de eventos (arribo, salida, etc.)
-├── core/            -> Núcleo de la simulación
-├── model/           -> Elementos del sistema
-├── main/            -> Contendrá Main.java
-└── utils/           -> Utilidades (generadores de tiempos)
+### Backend Java
+
+```bash
+cd app
+mvn package           # descarga dependencias y compila el proyecto
+mvn spring-boot:run   # levanta la API REST en http://localhost:8080
 ```
 
-A continuación se describen brevemente los componentes más importantes del
-directorio `src`:
+También es posible ejecutar la versión por consola con:
 
-- **core/Simulador**: gestiona el ciclo de eventos, la cola de asistentes y
-  mantiene la lista de impresoras disponibles.
-- **events**: contiene los eventos `LlegadaCliente` y `FinImpresion`, que
-  extienden de la clase abstracta `Event` y definen la lógica de la
-  simulación.
-- **model**: incluye las clases `Asistente`, `Impresora`, `Tecnico` y sus
-  enumeraciones de estado, modelando a los participantes del sistema.
-- **utils/Utils**: ofrece métodos para generar tiempos aleatorios (variables
-  exponencial y uniforme) usados en los eventos.
-- **main/Main**: punto de entrada que solicita por consola los parámetros de la
-  simulación y ejecuta el `Simulador`.
-
-#### Compilacion y ejecucion
-
-1. Instalar JDK 21 y Maven.
-2. Desde la carpeta `app`, ejecutar `mvn package` para compilar el proyecto.
-3. Ejecutar la aplicacion con `mvn exec:java -Dexec.mainClass=org.utn.sim.Main` o bien con `java -cp target/classes org.utn.sim.Main` despues de la compilacion. //si no les funcion el de maven pongan entre comillas el -> "-Dexec..Main"
-
-### Proyecto React
-
-abrir el proyecto en ``` app-frontend/ ```
-
-luego abrir en consola y ejecutar los siguientes comandos
-
-```
-npm i
+```bash
+mvn exec:java -Dexec.mainClass=org.utn.sim.Main
 ```
 
+### Frontend React
+
+```bash
+cd app-frontend
+npm install
+npm run dev           # servidor en modo desarrollo
 ```
-npm run dev
+
+La interfaz suele estar disponible en `http://localhost:5173` por defecto.
+
+Para generar la versión de producción:
+
+```bash
+npm run build
+npm run preview       # revisión local de la build
 ```
+
+## Estructura del código
+
+Dentro de `app/src/main/java/org/utn/sim` encontrarás los paquetes:
+
+- **core** – Implementación del motor de eventos de la simulación.
+- **events** – Eventos como `LlegadaCliente` y `FinImpresion`.
+- **model** – Clases que representan asistentes, impresoras y técnico.
+- **utils** – Generadores de tiempos aleatorios y utilidades varias.
+- **Main** – Versión de consola del simulador.
 
 ## Diagramas
 
-En la carpeta `assets` se encuentran los principales diagramas utilizados durante el modelado:
+En `assets/` se incluyen los diagramas que ayudaron a modelar el problema:
 
 - `analisis.png`
 - `diagrama de estado asistente.png`
 - `diagrama de estado impresora.png`
 - `diagrama de estado tecnico.png`
+
+Cada imagen ilustra los estados y transiciones de los actores principales.
+
+---
+
+¡Esperamos que este material te sea útil para comprender y ejecutar el proyecto!
