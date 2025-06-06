@@ -5,6 +5,7 @@ import lombok.ToString;
 import org.utn.sim.dto.AsistenteDTO;
 import org.utn.sim.dto.PuntoImpresionDTO;
 import org.utn.sim.dto.SimulacionDTO;
+import org.utn.sim.dto.SimulacionRequestDTO;
 import org.utn.sim.events.Event;
 import org.utn.sim.events.FinImpresion;
 import org.utn.sim.events.LlegadaCliente;
@@ -39,7 +40,7 @@ public class Simulador {
     // Cola de asistentes que llegan al sistema y deben ir a la cola
     private Queue<Asistente> colaAsistentes = new LinkedList<>();
     private Queue<Asistente> asistentespostergados = new LinkedList<>();
-
+    private SimulacionRequestDTO simulacionRequestDTO;
     //Estadistico
     private int acumAsistentesPostergados = 0;
     private int acumAsistentesFinalizados = 0;
@@ -51,12 +52,16 @@ public class Simulador {
      * Constructor por defecto. Inicializa el tiempo en cero, crea la lista de
      * impresoras inicial y agenda el primer evento de llegada.
      */
-    public Simulador() {
+
+
+    public Simulador(SimulacionRequestDTO simulacionRequestDTO) {
         this.tiempoActual = 0.0;
         this.tecnico = new Tecnico();
+        this.simulacionRequestDTO = simulacionRequestDTO;
         this.crearListaImpresoras(6);
-        this.eventosAProcesar.add(new LlegadaCliente(tiempoActual));
-        this.eventosAProcesar.add(new LlegadaTecnico(tiempoActual));
+        this.eventosAProcesar.add(new LlegadaCliente(this, tiempoActual));
+        this.eventosAProcesar.add(new LlegadaTecnico(this,tiempoActual));
+
 
     }
 
@@ -68,10 +73,12 @@ public class Simulador {
      * @param j hora de inicio de la muestra (no se utiliza aun)
      * @param i número de iteraciones a mostrar en consola
      */
-    public void run(double X, double j, int i) {
-        this.X = X;
-        this.j = j;
-        this.i = i;
+    public void run(SimulacionRequestDTO simulacionRequestDTO) {
+        this.X = simulacionRequestDTO.getTiempo();
+        this.j = simulacionRequestDTO.getInicio();
+        this.i = simulacionRequestDTO.getIteraciones();
+        this.simulacionRequestDTO = simulacionRequestDTO;
+
         int iteracionMostrada = 0;
         while (tiempoActual < X && iteracionActual < 100000) {
 

@@ -25,10 +25,10 @@ public class LlegadaCliente extends Event {
     /**
      * Constructor para un arribo normal.
      */
-    public LlegadaCliente(double tiempoActual) {
+    public LlegadaCliente(Simulador simulador, double tiempoActual) {
         this.nombre = "Llegada cliente normal";
         this.random = Math.random();
-        this.tiempoUsado = Utils.exponencialNegativa(2, random);
+        this.tiempoUsado = Utils.exponencialNegativa(simulador.getSimulacionRequestDTO().getExpAsistente(), random);
         this.tiempoLlegada = tiempoActual + tiempoUsado;
 
         this.asistente = new Asistente();
@@ -53,7 +53,7 @@ public class LlegadaCliente extends Event {
         simulador.setTiempoActual(tiempoLlegada);
         //TODO: si es un asistente postergado no se calcula proximo evento
         if (asistente.getEstado() != EstadoAsistente.VUELTAEN30MIN) {
-            simulador.agregarEvento(new LlegadaCliente(tiempoLlegada));
+            simulador.agregarEvento(new LlegadaCliente(simulador, tiempoLlegada));
         }
 
         Impresora impresoraAsignar = simulador.obtenerImpresoraLibre();
@@ -72,7 +72,7 @@ public class LlegadaCliente extends Event {
             }
             asistente.imprimir(impresoraAsignar);
             simulador.getAsistentesConsumiendoServicio().offer(asistente);
-            simulador.agregarEvento(new FinImpresion(tiempoLlegada, asistente));
+            simulador.agregarEvento(new FinImpresion(simulador, tiempoLlegada, asistente));
             return;
         }
         // no hay mas de 5 en cola y estan todas las puntos de impresion ocupados

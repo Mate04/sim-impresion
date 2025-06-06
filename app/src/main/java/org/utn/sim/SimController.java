@@ -17,12 +17,12 @@ public class SimController {
     @PostMapping("/sim")
     public SimulacionConDatosAdicionalesDTO simular(@RequestBody SimulacionRequestDTO request) {
 
-        Simulador simulador = new Simulador();
+        Simulador simulador = new Simulador(request);
 
         double tiempoPromedioEnCola = 0;
         double porcentajeQueFueronYVolvieron = 0;
         System.out.println("tiempo" + request.getTiempo() + " inicio: " + request.getInicio() + " iteraciones: " + request.getIteraciones());
-        simulador.run(request.getTiempo(), request.getInicio(), request.getIteraciones());
+        simulador.run(request);
 
         if(simulador.getAcumAsistentesEstuvieronCola() != 0) {
             tiempoPromedioEnCola = (simulador.getAcumuladorTiempoCola() / simulador.getAcumAsistentesEstuvieronCola());

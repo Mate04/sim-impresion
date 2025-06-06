@@ -15,9 +15,9 @@ public class LlegadaTecnico extends Event{
     private String nombre = "Llegada tecnico";
     private double random;
 
-    public LlegadaTecnico(double horaActual){
+    public LlegadaTecnico(Simulador simulador, double horaActual){
         random = Math.random();
-        this.tiempoUsado = Utils.uniforme(57, 63, random);
+        this.tiempoUsado = Utils.uniforme(simulador.getSimulacionRequestDTO().getLimInfTiempoFinDescanso(), simulador.getSimulacionRequestDTO().getLimSupTiempoFinDescanso(), random);
         this.tiempoLlegada = horaActual + this.tiempoUsado;
     }
 
@@ -25,7 +25,7 @@ public class LlegadaTecnico extends Event{
         //Verificamos que haya una maquina libre
         Impresora impresoraMantener = simulador.obtenerImpresoraAMantener();
         if (impresoraMantener != null) {
-            simulador.agregarEvento(new FinMantenimiento(this.tiempoLlegada,impresoraMantener));
+            simulador.agregarEvento(new FinMantenimiento(simulador, this.tiempoLlegada,impresoraMantener));
             simulador.getTecnico().mantener(impresoraMantener); //El tecnico pasa a estar ocupado y la maquina en mantenimiento
             return;
         }

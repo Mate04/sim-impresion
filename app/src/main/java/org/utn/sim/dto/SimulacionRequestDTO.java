@@ -1,33 +1,20 @@
 package org.utn.sim.dto;
 
+import lombok.Data;
+
+@Data
 public class SimulacionRequestDTO {
     private double tiempo;
     private double inicio;
     private int iteraciones;
+    private int limInfTiempoImpresion;
+    private int limSupTiempoImpresion;
+    private int expAsistente;
+    private int limInfTiempoFinDescanso;
+    private int limSupTiempoFinDescanso;
+    private int limInfTiempoMantenimiento;
+    private int limSupTiempoMantenimiento;
 
     public SimulacionRequestDTO() {}
 
-    public double getTiempo() {
-        return tiempo;
-    }
-
-    public void setTiempo(double tiempo) {
-        this.tiempo = tiempo;
-    }
-
-    public double getInicio() {
-        return inicio;
-    }
-
-    public void setInicio(double inicio) {
-        this.inicio = inicio;
-    }
-
-    public int getIteraciones() {
-        return iteraciones;
-    }
-
-    public void setIteraciones(int iteraciones) {
-        this.iteraciones = iteraciones;
-    }
 }

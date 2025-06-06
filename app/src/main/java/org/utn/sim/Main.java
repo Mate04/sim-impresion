@@ -24,8 +24,8 @@ public class Main {
         System.out.println("Ingrese el número de iteraciones i:");
         int i = scanner.nextInt();
 
-        Simulador simulador = new Simulador();
-        simulador.run(X, j, i);
+        //Simulador simulador = new Simulador();
+        //simulador.run(X, j, i);
 
     }
 }

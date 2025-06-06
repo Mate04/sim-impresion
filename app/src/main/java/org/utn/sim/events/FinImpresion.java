@@ -19,9 +19,9 @@ public class FinImpresion extends Event{
     /**
      * Constructor que calcula el tiempo de finalización de la impresión.
      */
-    public FinImpresion(double tiempoActual, Asistente asistente) {
+    public FinImpresion(Simulador simulador, double tiempoActual, Asistente asistente) {
         this.random = Math.random();
-        this.tiempoUsado = Utils.uniforme(5,8, random);
+        this.tiempoUsado = Utils.uniforme(simulador.getSimulacionRequestDTO().getLimInfTiempoImpresion(),simulador.getSimulacionRequestDTO().getLimSupTiempoImpresion(), random);
         this.tiempoLlegada = tiempoActual + tiempoUsado;
         this.asistente = asistente;
     }
@@ -37,7 +37,7 @@ public class FinImpresion extends Event{
         this.asistente.destruir();
         //todo: logica si el tecnico esta esperando a q se desocupe una maquina y se desocupa
         if (simulador.getTecnico().getEstado() == EstadoTecnico.ESPERANDO_FIN_DE_IMPRESION && !impresora.isMantenimientoSession()){
-            simulador.agregarEvento(new FinMantenimiento(this.tiempoLlegada,impresora));
+            simulador.agregarEvento(new FinMantenimiento(simulador,this.tiempoLlegada,impresora));
             simulador.getTecnico().mantener(impresora);
             return;
         }
@@ -46,7 +46,7 @@ public class FinImpresion extends Event{
         if (asisteOcupar != null) {
             asisteOcupar.imprimir(impresora);
             simulador.getAsistentesConsumiendoServicio().offer(asisteOcupar);
-            simulador.agregarEvento(new FinImpresion(simulador.getTiempoActual(), asisteOcupar));
+            simulador.agregarEvento(new FinImpresion(simulador,simulador.getTiempoActual(), asisteOcupar));
             return;
         } else {
             impresora.libre();

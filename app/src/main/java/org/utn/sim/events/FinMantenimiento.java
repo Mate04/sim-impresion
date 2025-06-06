@@ -12,9 +12,9 @@ public class FinMantenimiento extends Event{
     private double random;
     private Impresora impresora;
 
-    public FinMantenimiento(double horaActual, Impresora impresora) {
+    public FinMantenimiento(Simulador simulador,double horaActual, Impresora impresora) {
         this.random = Math.random();
-        this.tiempoUsado = Utils.uniforme(3, 10, random);
+        this.tiempoUsado = Utils.uniforme(simulador.getSimulacionRequestDTO().getLimInfTiempoMantenimiento(), simulador.getSimulacionRequestDTO().getLimSupTiempoMantenimiento(), random);
         this.tiempoLlegada = horaActual + tiempoUsado;
         this.impresora = impresora;
     }
@@ -25,7 +25,7 @@ public class FinMantenimiento extends Event{
         this.impresora.libre();
         //Verifica que no haya maquinas para mantener
         if (simulador.hayMaquinasParaMantener()){
-            simulador.agregarEvento(new LlegadaTecnico(this.tiempoLlegada));
+            simulador.agregarEvento(new LlegadaTecnico(simulador, this.tiempoLlegada));
             simulador.getTecnico().descansar();
             //reseteo la sesion, todas las maquinas pasan a estar en falso
             simulador.setMantenimientoMaquina();
@@ -35,7 +35,7 @@ public class FinMantenimiento extends Event{
         //Todo: Verificamos que haya una proxima maquina libre y tenga que mantenerse
         Impresora impresoraMantener = simulador.obtenerImpresoraAMantener();
         if(impresoraMantener != null){
-            simulador.agregarEvento(new FinMantenimiento(this.tiempoLlegada,impresoraMantener));
+            simulador.agregarEvento(new FinMantenimiento(simulador, this.tiempoLlegada,impresoraMantener));
             simulador.getTecnico().mantener(impresoraMantener);
             return;
         }
