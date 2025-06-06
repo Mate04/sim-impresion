@@ -40,11 +40,25 @@ directorio `src`:
 - **main/Main**: punto de entrada que solicita por consola los parámetros de la
   simulación y ejecuta el `Simulador`.
 
-## Compilacion y ejecucion
+#### Compilacion y ejecucion
 
 1. Instalar JDK 21 y Maven.
 2. Desde la carpeta `app`, ejecutar `mvn package` para compilar el proyecto.
 3. Ejecutar la aplicacion con `mvn exec:java -Dexec.mainClass=org.utn.sim.Main` o bien con `java -cp target/classes org.utn.sim.Main` despues de la compilacion. //si no les funcion el de maven pongan entre comillas el -> "-Dexec..Main"
+
+### Proyecto React
+
+abrir el proyecto en ``` app-frontend/ ```
+
+luego abrir en consola y ejecutar los siguientes comandos
+
+```
+npm i
+```
+
+```
+npm run dev
+```
 
 ## Diagramas
 
