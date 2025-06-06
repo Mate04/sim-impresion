@@ -9,8 +9,13 @@ public class ProximoEventoDTO {
     private double RND;
 
     public ProximoEventoDTO(Event evento) {
-        this.hora = evento.getTiempoLlegada() ;
-        this.RND =evento.getRandom();
+        if (evento != null) {
+            this.hora = evento.getTiempoLlegada();
+            this.RND = evento.getRandom();
+        } else {
+            this.hora = 0;
+            this.RND = 0;
+        }
     }
 
 }

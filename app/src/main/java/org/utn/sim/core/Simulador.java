@@ -253,7 +253,7 @@ public class Simulador {
     }
     public List<AsistenteDTO> generarDTOsAsistentes() {
         List<AsistenteDTO> asistentesDTO = new ArrayList<>();
-        for (Asistente asistente : this.asistentesConsumiendoServicio) {
+        for (Asistente asistente : this.colaAsistentes) {
             asistentesDTO.add(new AsistenteDTO(asistente));
         }
         return asistentesDTO;
