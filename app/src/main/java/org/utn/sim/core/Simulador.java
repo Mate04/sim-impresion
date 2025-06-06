@@ -1,5 +1,6 @@
 package org.utn.sim.core;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 import org.utn.sim.dto.AsistenteDTO;
@@ -18,6 +19,7 @@ import java.util.*;
 
 @Data
 @ToString
+@AllArgsConstructor
 public class Simulador {
     protected double tiempoActual;
     protected Event eventoActual;
@@ -68,9 +70,14 @@ public class Simulador {
         this.j = j;
         this.i = i;
         int iteracionMostrada = 0;
+        Event eventoProximo;
         while (tiempoActual < X && iteracionActual < 100000) {
-
             eventoActual = obtenerProximoEvento();
+            eventoProximo = proximoEventoPeek();
+            if (eventoProximo.getTiempoLlegada() < X && (iteracionActual + 1) < 100000){
+                SimulacionDTO ultimaIteracion = new SimulacionDTO(this);
+                this.agregarIteracion(ultimaIteracion);
+            }
             eventoActual.execute(this);
             this.tiempoActual = eventoActual.getTiempoLlegada();
             this.iteracionActual++;
@@ -80,8 +87,6 @@ public class Simulador {
                 iteracionMostrada++;
             }
         }
-        SimulacionDTO ultimaIteracion = new SimulacionDTO(this);
-        this.agregarIteracion(ultimaIteracion);
     }
 
     /**
@@ -118,6 +123,10 @@ public class Simulador {
      *
      * @return siguiente evento a ejecutar o {@code null} si no hay eventos.
      */
+
+    public Event proximoEventoPeek() {
+        return this.eventosAProcesar.peek();
+    }
     public Event obtenerProximoEvento() {
         return eventosAProcesar.poll();
     }
