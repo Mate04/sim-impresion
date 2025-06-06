@@ -74,7 +74,7 @@ public class Simulador {
         while (tiempoActual < X && iteracionActual < 100000) {
             eventoActual = obtenerProximoEvento();
             eventoProximo = proximoEventoPeek();
-            if (eventoProximo.getTiempoLlegada() < X && (iteracionActual + 1) < 100000){
+            if (eventoProximo.getTiempoLlegada() >= X || (iteracionActual + 1) >= 100000){
                 SimulacionDTO ultimaIteracion = new SimulacionDTO(this);
                 this.agregarIteracion(ultimaIteracion);
             }
