@@ -15,15 +15,13 @@ import org.utn.sim.model.Impresora;
 import org.utn.sim.model.Tecnico;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
-/**
- * Clase principal que implementa el motor de eventos discretos de la
- * simulación. Contiene la lógica para generar y procesar los distintos
- * eventos del sistema de impresión.
- */
 @Data
 @ToString
 public class Simulador {
+
     protected double tiempoActual;
     protected Event eventoActual;
     protected double X; // Tiempo de inicio de simulación
@@ -40,6 +38,8 @@ public class Simulador {
     private Queue<Asistente> asistentesConsumiendoServicio = new LinkedList<>();
     // Cola de asistentes que llegan al sistema y deben ir a la cola
     private Queue<Asistente> colaAsistentes = new LinkedList<>();
+    private Queue<Asistente> asistentespostergados = new LinkedList<>();
+
     //Estadistico
     private int acumAsistentesPostergados = 0;
     private int acumAsistentesFinalizados = 0;
@@ -84,8 +84,9 @@ public class Simulador {
                 this.agregarIteracion(iteracionAEnviar);
                 iteracionMostrada++;
             }
-
         }
+        SimulacionDTO ultimaIteracion = new SimulacionDTO(this);
+        this.agregarIteracion(ultimaIteracion);
     }
 
     /**
@@ -189,10 +190,6 @@ public class Simulador {
         this.acumAsistentesEstuvieronCola++;
     }
 
-    /**
-     * Indica si todas las impresoras requieren mantenimiento.
-     * Se utiliza para saber si el técnico puede retirarse.
-     */
     public boolean hayMaquinasParaMantener(){
         for (Impresora impresora : impresoras){
             if (!impresora.isMantenimientoSession()){
@@ -201,20 +198,12 @@ public class Simulador {
         }
         return true;
     }
-    /**
-     * Reinicia la bandera de mantenimiento de todas las impresoras al finalizar
-     * una sesión de mantenimiento.
-     */
     public void setMantenimientoMaquina(){
         for (Impresora impresora : impresoras){
             impresora.setMantenimientoSession(false);
         }
     }
 
-    /**
-     * Busca una impresora libre que aún no haya sido mantenida en la sesión
-     * actual.
-     */
     public Impresora obtenerImpresoraAMantener(){
         for (Impresora impresora : impresoras) {
             if (impresora.estaLibre() && !impresora.isMantenimientoSession()) {
@@ -224,10 +213,6 @@ public class Simulador {
         return null;
     }
 
-    /**
-     * Imprime por consola el estado de todas las impresoras. Solo útil para
-     * depuración.
-     */
     public void mostrarEstadoMaquinas() {
         List<EstadoImpresora> estadosMaquinas = new ArrayList<>();
         for (Impresora impresora : impresoras) {
@@ -235,14 +220,10 @@ public class Simulador {
         }
         System.out.println(estadosMaquinas);
     }
-    /** Lleva un conteo de las impresiones finalizadas. */
     public void contarFinImpresion(){
         this.acumReparaciones++;
     }
 
-    /**
-     * Busca en la cola de eventos la próxima llegada de un cliente.
-     */
     public LlegadaCliente buscarProximaLLegadaCliente() {
         for (Event evento : eventosAProcesar) {
             if (evento instanceof LlegadaCliente) {
@@ -251,9 +232,6 @@ public class Simulador {
         }
         return null;
     }
-    /**
-     * Busca en la cola de eventos la próxima llegada del técnico.
-     */
     public LlegadaTecnico buscarProximaLlegadaTecnico() {
         for (Event evento : eventosAProcesar) {
             if (evento instanceof LlegadaTecnico) {
@@ -263,9 +241,6 @@ public class Simulador {
         return null;
     }
 
-    /**
-     * Obtiene el próximo evento de finalización de impresión.
-     */
     public FinImpresion buscarProximoFinImpresion() {
         for (Event evento : eventosAProcesar) {
             if (evento instanceof FinImpresion) {
@@ -275,10 +250,32 @@ public class Simulador {
         return null;
     }
 
-    /**
-     * Genera un listado con el estado actual de cada impresora en forma de DTO
-     * para ser enviado al frontend.
-     */
+    public boolean removerAsistentePorId(Asistente asistente) {
+        if (asistente!=null){
+            for (Asistente a : asistentesConsumiendoServicio) {
+                if (a.getId() == asistente.getId()) {
+                    asistentesConsumiendoServicio.remove(a);
+                    return true; // Se encontró y eliminó
+                }
+            }
+        }
+
+        return false; // No se encontró
+    }
+
+    public boolean removerAsistentePostergadoPorId(Asistente asistente) {
+        if (asistente!=null){
+            for (Asistente a : asistentespostergados) {
+                if (a.getId() == asistente.getId()) {
+                    asistentespostergados.remove(a);
+                    return true; // Se encontró y eliminó
+                }
+            }
+        }
+        return false; // No se encontró
+    }
+
+
     public List<PuntoImpresionDTO> generarDTOsPuntosImpresion() {
         List<PuntoImpresionDTO> puntosImpresion = new ArrayList<>();
         for (Impresora impresora : impresoras) {
@@ -286,20 +283,22 @@ public class Simulador {
         }
         return puntosImpresion;
     }
-    /**
-     * Devuelve una lista de asistentes que permanecen en cola representados como
-     * DTOs.
-     */
     public List<AsistenteDTO> generarDTOsAsistentes() {
         List<AsistenteDTO> asistentesDTO = new ArrayList<>();
         for (Asistente asistente : this.colaAsistentes) {
             asistentesDTO.add(new AsistenteDTO(asistente));
         }
+        for (Asistente asistente : this.asistentesConsumiendoServicio) {
+            asistentesDTO.add(new AsistenteDTO(asistente));
+        }
+        for (Asistente asistente : this.asistentespostergados) {
+            asistentesDTO.add(new AsistenteDTO(asistente));
+        }
+        List<AsistenteDTO> filtrados = asistentesDTO.stream()
+                .filter(asistenteDTO -> !"DESTRUIDO".equals(asistenteDTO.getEstado()))
+                .collect(Collectors.toList());
         return asistentesDTO;
     }
-    /**
-     * Guarda una iteración generada para luego enviarla al cliente.
-     */
     public void agregarIteracion(SimulacionDTO simulacionDTO) {
         this.iteraciones.add(simulacionDTO);
     }

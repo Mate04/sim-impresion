@@ -4,10 +4,6 @@ import org.utn.sim.core.Simulador;
 
 import java.util.List;
 
-/**
- * DTO que agrupa toda la información relevante de una iteración de la
- * simulación para ser mostrada en el frontend.
- */
 @Data
 public class SimulacionDTO {
     private String evento;
@@ -22,10 +18,6 @@ public class SimulacionDTO {
     private int acAsistPostergados;
     private List<AsistenteDTO> asistente;
 
-    /**
-     * Extrae del simulador todos los datos necesarios para presentar una
-     * iteración en la interfaz.
-     */
     public SimulacionDTO(Simulador simulador) {
         this.evento = simulador.getEventoActual().getNombre();
         this.reloj = (simulador.getTiempoActual());

@@ -7,9 +7,10 @@ import org.utn.sim.model.EstadoAsistente;
 import org.utn.sim.model.Impresora;
 import org.utn.sim.utils.Utils;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
- * Clase que representa el evento de llegada de un asistente al sistema de
- * impresión.
+ * Clase que representa el evento de llegada de un cliente al sistema.
  */
 
 @ToString
@@ -20,6 +21,7 @@ public class LlegadaCliente extends Event {
     private Asistente asistente;
     private double random;
 
+
     /**
      * Constructor para un arribo normal.
      */
@@ -28,6 +30,7 @@ public class LlegadaCliente extends Event {
         this.random = Math.random();
         this.tiempoUsado = Utils.exponencialNegativa(2, random);
         this.tiempoLlegada = tiempoActual + tiempoUsado;
+
         this.asistente = new Asistente();
     }
 
@@ -52,19 +55,29 @@ public class LlegadaCliente extends Event {
         if (asistente.getEstado() != EstadoAsistente.VUELTAEN30MIN) {
             simulador.agregarEvento(new LlegadaCliente(tiempoLlegada));
         }
+
         Impresora impresoraAsignar = simulador.obtenerImpresoraLibre();
 
         if (simulador.hayMasDeNEnCola(5)){
             asistente.postergar();
+            simulador.getAsistentespostergados().offer(asistente);
             //todo: Hacer logica de crear evento postergado
             simulador.agregarEvento(new LlegadaCliente(tiempoLlegada,asistente));
             simulador.sumarAsistentePostergado();
             return;
         }
         if (impresoraAsignar != null ) {
+            if (asistente.getEstado() == EstadoAsistente.VUELTAEN30MIN) {
+                simulador.removerAsistentePostergadoPorId(asistente);
+            }
             asistente.imprimir(impresoraAsignar);
+            simulador.getAsistentesConsumiendoServicio().offer(asistente);
             simulador.agregarEvento(new FinImpresion(tiempoLlegada, asistente));
             return;
+        }
+        // no hay mas de 5 en cola y estan todas las puntos de impresion ocupados
+        if (asistente.getEstado() == EstadoAsistente.VUELTAEN30MIN){
+            simulador.removerAsistentePostergadoPorId(asistente);
         }
         asistente.ingresarCola(tiempoLlegada);
         simulador.sumarAsistentesEstuvieronCola();

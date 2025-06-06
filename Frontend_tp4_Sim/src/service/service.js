@@ -32,8 +32,8 @@ const rows = [
 
 const obtenerIteraciones = async (data) => {
     try {
-        console.log(data)
         const response = await axios.post(url, data);
+        console.log(response.data.simulacion[0]);
         return response.data;
         //return rows;
     } catch (error) {

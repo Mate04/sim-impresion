@@ -8,9 +8,6 @@ import org.utn.sim.model.EstadoTecnico;
 import org.utn.sim.model.Impresora;
 import org.utn.sim.utils.Utils;
 
-/**
- * Evento que marca la finalización de la impresión de un asistente.
- */
 @Data
 public class FinImpresion extends Event{
     private String nombre = "Fin impresion";
@@ -36,6 +33,7 @@ public class FinImpresion extends Event{
     public void execute(Simulador simulador) {
         Impresora impresora = this.asistente.getImpresora();
         simulador.setTiempoActual(tiempoLlegada);
+        simulador.removerAsistentePorId(asistente);
         this.asistente.destruir();
         //todo: logica si el tecnico esta esperando a q se desocupe una maquina y se desocupa
         if (simulador.getTecnico().getEstado() == EstadoTecnico.ESPERANDO_FIN_DE_IMPRESION && !impresora.isMantenimientoSession()){
@@ -47,6 +45,7 @@ public class FinImpresion extends Event{
         Asistente asisteOcupar = simulador.obtenerPrimeroFilaAsistente();
         if (asisteOcupar != null) {
             asisteOcupar.imprimir(impresora);
+            simulador.getAsistentesConsumiendoServicio().offer(asisteOcupar);
             simulador.agregarEvento(new FinImpresion(simulador.getTiempoActual(), asisteOcupar));
             return;
         } else {
@@ -54,6 +53,7 @@ public class FinImpresion extends Event{
 
         }
         simulador.sumarAsistenteFinalizado();
+
 
     }
 

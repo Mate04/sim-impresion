@@ -5,31 +5,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.utn.sim.core.Simulador;
+import org.utn.sim.dto.SimulacionConDatosAdicionalesDTO;
 import org.utn.sim.dto.SimulacionDTO;
 import org.utn.sim.dto.SimulacionRequestDTO;
 
 import java.util.List;
 
-/**
- * Controlador REST que expone el punto de entrada para ejecutar la simulación
- * desde el frontend.
- */
 @RestController
 public class SimController {
 
-    /**
-     * Recibe los parámetros de la simulación y devuelve las iteraciones
-     * solicitadas.
-     *
-     * @param request datos de tiempo total, inicio y cantidad de iteraciones
-     * @return lista con la información de cada iteración generada
-     */
     @PostMapping("/sim")
-    public List<SimulacionDTO> simular(@RequestBody SimulacionRequestDTO request) {
+    public SimulacionConDatosAdicionalesDTO simular(@RequestBody SimulacionRequestDTO request) {
+
         Simulador simulador = new Simulador();
+
+        double tiempoPromedioEnCola = 0;
+        double porcentajeQueFueronYVolvieron = 0;
         System.out.println("tiempo" + request.getTiempo() + " inicio: " + request.getInicio() + " iteraciones: " + request.getIteraciones());
         simulador.run(request.getTiempo(), request.getInicio(), request.getIteraciones());
-        return simulador.getIteraciones();
+
+        if(simulador.getAcumAsistentesEstuvieronCola() != 0) {
+            tiempoPromedioEnCola = (simulador.getAcumuladorTiempoCola() / simulador.getAcumAsistentesEstuvieronCola());
+        }
+        if (simulador.getAcumAsistentesFinalizados() != 0) {
+            porcentajeQueFueronYVolvieron = ((double) simulador.getAcumAsistentesPostergados() / simulador.getAcumAsistentesFinalizados()) * 100;
+        }
+
+        SimulacionConDatosAdicionalesDTO simuladorDto = new SimulacionConDatosAdicionalesDTO(simulador.getIteraciones(), tiempoPromedioEnCola, porcentajeQueFueronYVolvieron);
+        return simuladorDto;
     }
 
 }

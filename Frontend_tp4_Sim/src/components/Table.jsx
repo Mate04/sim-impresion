@@ -1,21 +1,21 @@
 import * as React from 'react';
-import { 
-  Box, 
-  Collapse, 
-  IconButton, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow, 
-  Typography, 
-  Paper 
+import {
+  Box,
+  Collapse,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Paper
 } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 
 
-function Row({ row }) {
+function Row({ row, isLast }) {
   const [open, setOpen] = React.useState(false);
 
   // Helper to round numbers to 2 decimals, but keep non-numbers as is
@@ -24,7 +24,7 @@ function Row({ row }) {
 
   return (
     <>
-      <TableRow>
+      <TableRow sx={isLast ? { backgroundColor: '#d4edda' } : {}}>
         <TableCell sx={{ borderRight: '1px solid #ccc' }}>
           <IconButton size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
@@ -85,51 +85,67 @@ function Row({ row }) {
   );
 }
 
-export default function CollapsibleTable({rows}) {
+export default function CollapsibleTable({ rows, tiempoPromedioEnCola, PorcentajeAsistentesQueSeVan }) {
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
-      <Table stickyHeader>
-        <TableHead>
-          <TableRow sx={{ backgroundColor: '#676767' }}>
-            <TableCell sx={{ color: '#fff', position: 'sticky', top: 0, backgroundColor: '#676767' }} rowSpan={2} />
-            <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>Evento</TableCell>
-            <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>Reloj</TableCell>
-            <TableCell align="center" colSpan={2} sx={{ ...headStyle }}>Próx Asist</TableCell>
-            <TableCell align="center" colSpan={2} sx={{ ...headStyle }}>Próx Técnico</TableCell>
-            <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>Estado Técnico</TableCell>
-            <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>Cola Asistentes</TableCell>
-            {rows[0].puntosImpresion.map(p => (
-              <TableCell key={p.id} align="center" colSpan={3} sx={{ ...headStyle }}>
-                Punto de Impresión {p.id}
-              </TableCell>
+    <>
+      <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow sx={{ backgroundColor: '#676767' }}>
+              <TableCell sx={{ color: '#fff', position: 'sticky', top: 0, backgroundColor: '#676767' }} rowSpan={2} />
+              <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>Evento</TableCell>
+              <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>Reloj</TableCell>
+              <TableCell align="center" colSpan={2} sx={{ ...headStyle }}>Próx Asist</TableCell>
+              <TableCell align="center" colSpan={2} sx={{ ...headStyle }}>Próx Técnico</TableCell>
+              <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>Estado Técnico</TableCell>
+              <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>Cola Asistentes</TableCell>
+              {rows.length > 0 && rows[0].puntosImpresion.map(p => (
+                <TableCell key={p.id} align="center" colSpan={3} sx={{ ...headStyle }}>
+                  Punto de Impresión {p.id}
+                </TableCell>
+              ))}
+              <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>AC Asist Cola</TableCell>
+              <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>AC Tiempo Cola</TableCell>
+              <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>AC Postergados</TableCell>
+            </TableRow>
+            <TableRow sx={{ backgroundColor: '#929292' }}>
+              <TableCell align="right" sx={subHeadStyle}>RND</TableCell>
+              <TableCell align="right" sx={subHeadStyle}>Hora</TableCell>
+              <TableCell align="right" sx={subHeadStyle}>RND</TableCell>
+              <TableCell align="right" sx={subHeadStyle}>Hora</TableCell>
+              {rows.length > 0 && rows[0].puntosImpresion.map((_, i) => (
+                <React.Fragment key={i}>
+                  <TableCell align="right" sx={subHeadStyle}>Estado</TableCell>
+                  <TableCell align="right" sx={subHeadStyle}>Hora</TableCell>
+                  <TableCell align="right" sx={subHeadStyle}>AC/Flag Mant</TableCell>
+                </React.Fragment>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) => (
+              <Row key={row.reloj} row={row} isLast={index === rows.length - 1} />
             ))}
-            <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>AC Asist Cola</TableCell>
-            <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>AC Tiempo Cola</TableCell>
-            <TableCell align="right" sx={{ ...headStyle }} rowSpan={2}>AC Postergados</TableCell>
-          </TableRow>
-          <TableRow sx={{ backgroundColor: '#929292' }}>
-            <TableCell align="right" sx={subHeadStyle}>RND</TableCell>
-            <TableCell align="right" sx={subHeadStyle}>Hora</TableCell>
-            <TableCell align="right" sx={subHeadStyle}>RND</TableCell>
-            <TableCell align="right" sx={subHeadStyle}>Hora</TableCell>
-            {rows[0].puntosImpresion.map((_, i) => (
-              <React.Fragment key={i}>
-                <TableCell align="right" sx={subHeadStyle}>Estado</TableCell>
-                <TableCell align="right" sx={subHeadStyle}>Hora</TableCell>
-                <TableCell align="right" sx={subHeadStyle}>AC/Flag Mant</TableCell>
-              </React.Fragment>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <Row key={row.reloj} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableBody>
+
+        </Table>
+      </TableContainer>
+
+      <Box sx={{ mt: 2, p: 2, border: '1px solid #ccc', borderRadius: 2, backgroundColor: '#f7f7f7' }}>
+        <Typography variant="h6" gutterBottom>
+          Resultados finales
+        </Typography>
+        <Typography variant="body1">
+          <strong>Tiempo promedio en cola:</strong> {tiempoPromedioEnCola.toFixed(2)} minutos
+        </Typography>
+        <Typography variant="body1">
+          <strong>Porcentaje de asistentes que se fueron:</strong> {PorcentajeAsistentesQueSeVan.toFixed(2)}%
+        </Typography>
+      </Box>
+    </>
   );
 }
+
 
 const headStyle = {
   borderRight: '1px solid #ccc',

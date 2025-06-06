@@ -4,12 +4,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-/**
- * Representa a la persona que llega al sistema para solicitar una impresión.
- */
+import java.util.concurrent.atomic.AtomicLong;
+
 @Data
 @ToString
 public class Asistente {
+    private static final AtomicLong secuencia = new AtomicLong(0); // ID global
+    private long id;
     private EstadoAsistente estado;
     private double horallegadaCola = 0;
     private Impresora impresora;
@@ -20,6 +21,7 @@ public class Asistente {
      */
     public Asistente (){
         this.estado = EstadoAsistente.CREADO;
+        this.id = secuencia.getAndIncrement();;
     }
 
     /**

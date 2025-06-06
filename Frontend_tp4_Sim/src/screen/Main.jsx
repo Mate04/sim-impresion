@@ -39,6 +39,7 @@ const Main = () => {
             setLoading(true)
             const data = await service.obtenerIteraciones({tiempo, inicio, iteraciones})
             setData(data)
+
         } catch (error) {
             alert('error al cargar simulacion')
         } finally{
@@ -93,7 +94,7 @@ const Main = () => {
             <div>
                 {
                     (data !== null )? (
-                        <Table rows={data}></Table>
+                        <Table rows={data.simulacion} tiempoPromedioEnCola={data.tiempoPromedioColaAsistente} PorcentajeAsistentesQueSeVan={data.porcentajeAsistentesQueSeVan}></Table>
                     ): null
                 }
             </div>

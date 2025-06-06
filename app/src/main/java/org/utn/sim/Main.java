@@ -5,12 +5,6 @@ import org.utn.sim.model.Impresora;
 
 import java.util.Scanner;
 
-/**
- * Versión por consola del simulador.
- * <p>
- * Solicita al usuario los parámetros necesarios y ejecuta la simulación sin
- * interfaz gráfica.
- */
 public class Main {
     /**
      * Punto de entrada de la aplicación. Solicita los parámetros de la
