@@ -55,6 +55,8 @@ Dentro de `app/src/main/java/org/utn/sim` encontrarás los paquetes:
 - **utils** – Generadores de tiempos aleatorios y utilidades varias.
 - **Main** – Versión de consola del simulador.
 
+---
+
 ## Diagramas
 
 En `assets/` se incluyen los diagramas que ayudaron a modelar el problema:
@@ -66,6 +68,5 @@ En `assets/` se incluyen los diagramas que ayudaron a modelar el problema:
 
 Cada imagen ilustra los estados y transiciones de los actores principales.
 
----
 
-¡Esperamos que este material te sea útil para comprender y ejecutar el proyecto!
+
