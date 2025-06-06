@@ -79,8 +79,9 @@ public class Simulador {
                 this.agregarIteracion(iteracionAEnviar);
                 iteracionMostrada++;
             }
-
         }
+        SimulacionDTO ultimaIteracion = new SimulacionDTO(this);
+        this.agregarIteracion(ultimaIteracion);
     }
 
     /**
