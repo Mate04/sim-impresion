@@ -1,4 +1,5 @@
-# Simulación de Impresión - Trabajo Práctico 4
+# Simulación de Impresión
+Usando Programacion orientada a objetos y orientada a evento, se describe mas en detalle a continuacion:
 
 Este repositorio contiene la implementación de un pequeño simulador de un centro de impresión. El proyecto se divide en dos módulos principales:
 
